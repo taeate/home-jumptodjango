@@ -29,7 +29,7 @@ ALLOWED_HOSTS = []
 
 
 # Application definition
-
+# PyboConfig 추가
 INSTALLED_APPS = [
     'pybo.apps.PyboConfig',
     'django.contrib.admin',
