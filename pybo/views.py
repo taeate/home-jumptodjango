@@ -1,57 +1,22 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from django.utils import  timezone
+from django.shortcuts import render
 from .models import Question
-from .forms import QuestionForm, AnswerForm
+
+
 
 def index(request):
-   """
-   pybo 목록 출력
-   """
-   question_list = Question.objects.order_by('-create_date')
-   context = {'question_list': question_list}
-   return  render(request, 'pybo/question_list.html', context)
+    """
+    pybo 목록 출력
+    """
+    question_list = Question.objects.order_by('-create_date')
 
+      # 질문 목록 데이터 는  Question.objects.order_by('create_date') 로 얻을수있다
+      # order_by는 조회 결과를 정렬 하는 함수 이다.
+      # order_by('-create_date')는 작성일 시 역순 으로 정렬 하라는 의미.
+      # - 기호가 붙어 있으면 역방향, 없으면 순방향 정렬을 의미 한다.
 
-def detail(request, question_id):
-   """
-   pybo 내용 출력
-   """
-   question = get_object_or_404(Question, pk=question_id)
-   context = {'question': question}
-   return render(request, 'pybo/question_detail.html', context)
+    context = {'question_list': question_list}
+    return render(request, 'pybo/question_list.html', context)
 
-
-def answer_create(request, question_id):
-   """
-   pybo 답변등록
-   """
-   question = get_object_or_404(Question, pk=question_id)
-   if request.method == "POST":
-      form = AnswerForm(request.POST)
-      if form.is_valid():
-         answer = form.save(commit=False)
-         answer.create_date = timezone.now()
-         answer.question = question
-         answer.save()
-         return redirect('pybo:detail', question_id=question.id)
-   else:
-      form = AnswerForm()
-   context = {'question': question, 'form': form}
-   return render(request, 'pybo/question_detail.html', context)
-
-
-def question_create(request):
-   """
-   pybo 질문등록
-   """
-   if request.method == 'POST':
-      form = QuestionForm(request.POST)
-      if form.is_valid():
-         question = form.save(commit=False)
-         question.create_date = timezone.now()
-         question.save()
-         return redirect('pybo:index')
-   else:
-      form = QuestionForm()
-   context = {'form': form}
-   return render(request, 'pybo/question_form.html', context)
+      # render 함수는 파이썬 데이터 를 템플릿 에 적용 하여 HTML 로 반환 하는 함수.
+      # 여기서 render 은  question_list 데이터 를 pybo/question_list.html 파일에 적용 하여 HTML 을 리턴 한다.
+      # pybo/question_list.html 과 같은 파일을 템플릿(Template)이라고 부른다.
